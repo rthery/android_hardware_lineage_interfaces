@@ -20,7 +20,7 @@ include $(CLEAR_VARS)
 LOCAL_MODULE := android.hardware.wifi@1.0-legacy_service-lib
 LOCAL_MODULE_RELATIVE_PATH := hw
 LOCAL_PROPRIETARY_MODULE := true
-LOCAL_CPPFLAGS := -Wall -Werror -Wextra
+LOCAL_CPPFLAGS := -include hardware/lineage/interfaces/wifi/1.0-legacy/undef_nan.h -Wall -Wno-error -Wno-error=return-type -Wno-error=switch -Wextra
 ifdef WIFI_HAL_INTERFACE_COMBINATIONS
 LOCAL_CPPFLAGS += -DWIFI_HAL_INTERFACE_COMBINATIONS="$(WIFI_HAL_INTERFACE_COMBINATIONS)"
 endif
@@ -83,7 +83,7 @@ LOCAL_MODULE := android.hardware.wifi@1.0-service.legacy
 LOCAL_VINTF_FRAGMENTS := android.hardware.wifi@1.0-service.legacy.xml
 LOCAL_MODULE_RELATIVE_PATH := hw
 LOCAL_PROPRIETARY_MODULE := true
-LOCAL_CPPFLAGS := -Wall -Werror -Wextra
+LOCAL_CPPFLAGS := -include hardware/lineage/interfaces/wifi/1.0-legacy/undef_nan.h -Wall -Wno-error -Wno-error=return-type -Wno-error=switch -Wextra
 LOCAL_SRC_FILES := \
     service.cpp
 LOCAL_SHARED_LIBRARIES := \
@@ -115,7 +115,7 @@ LOCAL_OVERRIDES_MODULES := android.hardware.wifi@1.0-service.legacy
 LOCAL_CFLAGS := -DLAZY_SERVICE
 LOCAL_MODULE_RELATIVE_PATH := hw
 LOCAL_PROPRIETARY_MODULE := true
-LOCAL_CPPFLAGS := -Wall -Werror -Wextra
+LOCAL_CPPFLAGS := -include hardware/lineage/interfaces/wifi/1.0-legacy/undef_nan.h -Wall -Wno-error -Wno-error=return-type -Wno-error=switch -Wextra
 LOCAL_SRC_FILES := \
     service.cpp
 LOCAL_SHARED_LIBRARIES := \

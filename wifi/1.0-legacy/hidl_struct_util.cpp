@@ -2297,6 +2297,7 @@ WifiChannelWidthInMhz convertLegacyWifiChannelWidthToHidl(
             return WifiChannelWidthInMhz::WIDTH_INVALID;
     };
     CHECK(false) << "Unknown legacy type: " << type;
+    __builtin_unreachable();
 }
 
 legacy_hal::wifi_rtt_preamble convertHidlRttPreambleToLegacy(RttPreamble type) {
@@ -2325,6 +2326,7 @@ RttPreamble convertLegacyRttPreambleToHidl(legacy_hal::wifi_rtt_preamble type) {
             return RttPreamble::HE;
     };
     CHECK(false) << "Unknown legacy type: " << type;
+    __builtin_unreachable();
 }
 
 legacy_hal::wifi_rtt_bw convertHidlRttBwToLegacy(RttBw type) {
@@ -2361,6 +2363,7 @@ RttBw convertLegacyRttBwToHidl(legacy_hal::wifi_rtt_bw type) {
             return RttBw::BW_160MHZ;
     };
     CHECK(false) << "Unknown legacy type: " << type;
+    __builtin_unreachable();
 }
 
 legacy_hal::wifi_motion_pattern convertHidlRttMotionPatternToLegacy(
