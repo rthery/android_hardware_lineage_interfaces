@@ -1222,6 +1222,8 @@ NanStatusType convertLegacyNanStatusTypeToHidl(legacy_hal::NanStatusType type) {
             return NanStatusType::FOLLOWUP_TX_QUEUE_FULL;
         case legacy_hal::NAN_STATUS_UNSUPPORTED_CONCURRENCY_NAN_DISABLED:
             return NanStatusType::UNSUPPORTED_CONCURRENCY_NAN_DISABLED;
+        default:
+            return NanStatusType::INTERNAL_FAILURE;
     }
     CHECK(false);
 }
@@ -2387,6 +2389,8 @@ RttType convertLegacyRttTypeToHidl(legacy_hal::wifi_rtt_type type) {
             return RttType::ONE_SIDED;
         case legacy_hal::RTT_TYPE_2_SIDED:
             return RttType::TWO_SIDED;
+        default:
+            return RttType::TWO_SIDED;
     };
     CHECK(false) << "Unknown legacy type: " << type;
 }
@@ -2483,6 +2487,8 @@ V1_6::RttPreamble convertLegacyRttPreambleToHidl(legacy_hal::wifi_rtt_preamble t
             return V1_6::RttPreamble::HE;
         case legacy_hal::WIFI_RTT_PREAMBLE_EHT:
             return V1_6::RttPreamble::EHT;
+        default:
+            return V1_6::RttPreamble::LEGACY;
     };
     CHECK(false) << "Unknown legacy type: " << type;
 }
@@ -2523,6 +2529,8 @@ RttBw convertLegacyRttBwToHidl(legacy_hal::wifi_rtt_bw type) {
             return RttBw::BW_160MHZ;
         case legacy_hal::WIFI_RTT_BW_320:
             return RttBw::BW_320MHZ;
+        default:
+            return RttBw::BW_20MHZ;
     };
     CHECK(false) << "Unknown legacy type: " << type;
 }
@@ -2612,6 +2620,8 @@ RttStatus convertLegacyRttStatusToHidl(legacy_hal::wifi_rtt_status status) {
             return RttStatus::FAILURE;  // TODO: add HIDL enumeration
         case legacy_hal::RTT_STATUS_NAN_RANGING_CONCURRENCY_NOT_SUPPORTED:
             return RttStatus::FAILURE;  // TODO: add HIDL enumeration
+        default:
+            return RttStatus::FAILURE;
     };
     CHECK(false) << "Unknown legacy status: " << status;
 }

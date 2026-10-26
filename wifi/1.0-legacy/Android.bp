@@ -109,6 +109,8 @@ cc_library_static {
         "android.hardware.wifi@1.5",
         "android.hardware.wifi@1.6",
     ],
+    header_libs: ["wifi_legacy_headers"],
+    export_header_lib_headers: ["wifi_legacy_headers"],
 
     export_include_dirs: ["."],
 }
