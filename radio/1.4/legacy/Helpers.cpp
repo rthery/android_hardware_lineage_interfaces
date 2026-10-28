@@ -148,7 +148,9 @@ hidl_vec<hidl_string> DelimitedStrToVec(std::string delimitedStr){
 
     std::vector<hidl_string> tokens;
     for ( ; iter != end; ++iter)
-        tokens.push_back(hidl_string(*iter));
+        // An empty or space-led string yields empty tokens, which the framework rejects.
+        if (iter->length() > 0)
+            tokens.push_back(hidl_string(*iter));
 
     return hidl_vec(tokens);
 }
