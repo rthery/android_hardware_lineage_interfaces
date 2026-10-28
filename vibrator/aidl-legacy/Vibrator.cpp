@@ -5,6 +5,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+#include <chrono>
+#include <thread>
+
 #include <log/log.h>
 
 #include <hardware/hardware.h>
@@ -42,8 +45,24 @@ ndk::ScopedAStatus Vibrator::getCapabilities(int32_t* _aidl_return) {
     return ndk::ScopedAStatus::ok();
 }
 
+static void notifyComplete(const std::shared_ptr<IVibratorCallback>& callback) {
+    if (!callback->onComplete().isOk()) {
+        ALOGE("Failed to call onComplete");
+    }
+}
+
 ndk::ScopedAStatus Vibrator::off() {
     int32_t ret = mDevice->vibrator_off(mDevice);
+
+    std::shared_ptr<IVibratorCallback> callback;
+    {
+        std::lock_guard lock(mMutex);
+        callback = std::move(mVibrationCallback);
+    }
+    if (callback) {
+        std::thread([callback] { notifyComplete(callback); }).detach();
+    }
+
     if (ret != 0) {
         ALOGE("off command failed : %s", strerror(-ret));
         return ndk::ScopedAStatus::fromExceptionCode(EX_TRANSACTION_FAILED);
@@ -51,11 +70,31 @@ ndk::ScopedAStatus Vibrator::off() {
     return ndk::ScopedAStatus::ok();
 }
 
-ndk::ScopedAStatus Vibrator::on(int32_t timeoutMs, const std::shared_ptr<IVibratorCallback>& /*callback*/) {
+ndk::ScopedAStatus Vibrator::on(int32_t timeoutMs, const std::shared_ptr<IVibratorCallback>& callback) {
     int32_t ret = mDevice->vibrator_on(mDevice, timeoutMs);
     if (ret != 0) {
         ALOGE("on command failed : %s", strerror(-ret));
         return ndk::ScopedAStatus::fromExceptionCode(EX_TRANSACTION_FAILED);
+    }
+
+    {
+        std::lock_guard lock(mMutex);
+        mVibrationCallback = callback;
+    }
+    if (callback) {
+        // The legacy HAL has no completion event: notify once the timeout elapses,
+        // unless off() or a newer on() took over the callback.
+        std::thread([timeoutMs, callback, self = ref<Vibrator>()] {
+            std::this_thread::sleep_for(std::chrono::milliseconds(timeoutMs));
+            {
+                std::lock_guard lock(self->mMutex);
+                if (self->mVibrationCallback != callback) {
+                    return;
+                }
+                self->mVibrationCallback = nullptr;
+            }
+            notifyComplete(callback);
+        }).detach();
     }
     return ndk::ScopedAStatus::ok();
 }

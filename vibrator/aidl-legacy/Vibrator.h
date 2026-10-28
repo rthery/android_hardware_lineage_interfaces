@@ -8,6 +8,8 @@
 
 #include <aidl/android/hardware/vibrator/BnVibrator.h>
 
+#include <mutex>
+
 #include <hardware/hardware.h>
 #include <hardware/vibrator.h>
 
@@ -55,6 +57,8 @@ public:
 
 private:
     vibrator_device_t *mDevice;
+    std::mutex mMutex;
+    std::shared_ptr<IVibratorCallback> mVibrationCallback;
 };
 
 } // namespace vibrator
